@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Token Auth</title>
+</head>
+<body>
+
+    <h2>Login Form</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br><br>
+        
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        
+        <button type="submit">Login</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            // Collect username and password
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Send POST request to the authentication API
+            fetch('/api-token-auth/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    // If the response contains a token, display it
+                    document.getElementById('message').textContent = 'Token: ' + data.token;
+                } else {
+                    // Otherwise, display login failed message
+                    document.getElementById('message').textContent = 'Login failed';
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('message').textContent = 'Login failed';
+            });
+        });
+    </script>
+
+</body>
+</html>
