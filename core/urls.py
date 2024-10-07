@@ -27,8 +27,11 @@ from django.views.decorators.csrf import csrf_exempt
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', api_auth_views.intro),
+    path('welcome', api_auth_views.welcome),
+    path('welcome_details', api_auth_views.welcome_details),  
 ]
 
 urlpatterns += [
     path('api-token-auth/', csrf_exempt(views.obtain_auth_token))
+
 ]

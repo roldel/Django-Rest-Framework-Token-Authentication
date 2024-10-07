@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+</head>
+<body>
+
+    <h2>Welcome, <span id="usernameDisplay"></span>!</h2>
+    <button id="logoutButton">Logout</button>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            // No token found, redirect to login page
+            window.location.href = '/';
+        } else {
+            // Send GET request to the authentication check endpoint
+            fetch('/welcome_details', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Token ' + token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.username) {
+                    // Display the username
+                    document.getElementById('usernameDisplay').textContent = data.username;
+                } else {
+                    // Invalid token or no user, redirect to login
+                    window.location.href = '/';
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                window.location.href = '/';
+            });
+        }
+
+        // Logout button functionality
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            localStorage.removeItem('token'); // Remove the token from localStorage
+            window.location.href = '/'; // Redirect to login page
+        });
+    </script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Token Auth</title>
+    <title>Login</title>
 </head>
 <body>
 
@@ -11,10 +11,10 @@
     <form id="loginForm">
         <label for="username">Username:</label><br>
         <input type="text" id="username" name="username"><br><br>
-        
+
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password"><br><br>
-        
+
         <button type="submit">Login</button>
     </form>
 
@@ -22,13 +22,13 @@
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form from submitting the traditional way
+            event.preventDefault(); // Prevent default form submission
 
-            // Collect username and password
+            // Get user input
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Send POST request to the authentication API
+            // Send a POST request to the API
             fetch('/api-token-auth/', {
                 method: 'POST',
                 headers: {
@@ -42,16 +42,18 @@
             .then(response => response.json())
             .then(data => {
                 if (data.token) {
-                    // If the response contains a token, display it
-                    document.getElementById('message').textContent = 'Token: ' + data.token;
+                    // Save token to localStorage
+                    localStorage.setItem('token', data.token);
+                    // Redirect to welcome page
+                    window.location.href = '/welcome';
                 } else {
-                    // Otherwise, display login failed message
-                    document.getElementById('message').textContent = 'Login failed';
+                    // Display login failed message
+                    document.getElementById('message').textContent = 'Login failed. Try again!';
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
-                document.getElementById('message').textContent = 'Login failed';
+                document.getElementById('message').textContent = 'Login failed. Please try again!';
             });
         });
     </script>
